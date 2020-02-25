@@ -88,14 +88,14 @@ saveRDS(estimates, "out/cfr.rds")
 png("figures/ncov_cases.png", height = 350, width = 900)
 par(mfrow = c(1, 2))
 barplot(cases,
-		col = cols[2], xlab = "Data: WHO Situation Reports", ylab = "Cases",
-		main = "Symptom onset in cases outside China", axes = FALSE, frame = FALSE)
+        col = cols[2], xlab = "Data: WHO Situation Reports", ylab = "Cases",
+        main = "Symptom onset in cases outside China", axes = FALSE, frame = FALSE)
 axis(1, interval, begin + interval - 1)
 axis(2)
 barplot(t(as.matrix(exports[, 3:4])),
-		ylim = c(0, max(cases)),
-		col = cols[c(1,3)], xlab = "Data: WHO, ECDC, Media", ylab = "Deaths",
-		main = "Deaths among cases outside China", axes = FALSE, frame = FALSE)
+        ylim = c(0, max(cases)),
+        col = cols[c(1,3)], xlab = "Data: WHO, ECDC, Media", ylab = "Deaths",
+        main = "Deaths among cases outside China", axes = FALSE, frame = FALSE)
 axis(1, interval, begin + interval - 1)
 axis(2)
 dev.off()
@@ -103,9 +103,9 @@ dev.off()
 # Plot the estimates
 png("figures/ncov_cfr.png", height = 350, width = 450)
 plotCI(estimates$date, estimates$mle,
-	   ui = estimates$upper, li = estimates$lower,
-	   ylim = c(0, 0.2), pch = 16, col = cols[2],
-	   xlab = NA, ylab = "Case fatality ratio", axes = FALSE, frame = FALSE)
+       ui = estimates$upper, li = estimates$lower,
+       ylim = c(0, 0.2), pch = 16, col = cols[2],
+       xlab = NA, ylab = "Case fatality ratio", axes = FALSE, frame = FALSE)
 axis(1, estimates$date, paste0(day(estimates$date), "/", month(estimates$date)))
 axis(2)
 dev.off()
