@@ -4,18 +4,20 @@ source("evaluation/simulate.R")
 linton_dist <- estimateGamma("data/linton_supp_tableS1_S2_8Feb2020.csv")
 
 # different periods (in days) being simulated
-periods <- c(32, 64, 128, 256, 512)
+periods <- c(32, 64, 128, 256)
 # expected CFR
 expectedCFR <- 0.02
 
 # simulations of slow and non-exponential epidemic growth over varying periods
 for (period in periods) {
-  results <- sim(linton_dist, expectedCFR, period, minDailyCaseCount=0, maxDailyCaseCount=4, iterations=100)
+  results <- sim(linton_dist, expectedCFR, period, minDailyCaseCount=0, maxDailyCaseCount=4)
+  print(results)
   saveRDS(results, sprintf("evaluation/out/slow_%i.rds", period))
 }
 
 # simulations of fast and non-exponential epidemic growth over varying periods
 for (period in periods) {
-  results <- sim(linton_dist, expectedCFR, period, minDailyCaseCount=0, maxDailyCaseCount=100, iterations=100)
+  results <- sim(linton_dist, expectedCFR, period, minDailyCaseCount=0, maxDailyCaseCount=100)
+  print(results)
   saveRDS(results, sprintf("evaluation/out/fast_%i.rds", period))
 }

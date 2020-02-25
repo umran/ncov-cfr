@@ -12,7 +12,7 @@ source("evaluation/estimate.R")
 # 6. [iterations]: the number of iterations over which CFR will be estimated from cases randomly sampled
 #    from the underlying distribution
 sim <- function(delayDistribution, expectedCFR, period,
-                              minDailyCaseCount=0, maxDailyCaseCount=4, iterations=100) {
+                              minDailyCaseCount=0, maxDailyCaseCount=4, iterations=1) {
   # [estimates] is a table used to collate estimates generated from all iterations.
   # for each iteration we record:
   # 1. the estimated CFR, 
