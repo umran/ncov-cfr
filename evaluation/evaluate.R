@@ -19,7 +19,7 @@ for (period in periods) {
 # simulations of fast and non-exponential epidemic growth over varying periods
 for (period in periods) {
   results <- sim(linton_dist, expectedCFR, period, minDailyCaseCount=0, maxDailyCaseCount=100)
-  print(sprintf("showing estimates for a slow, non-exponentially growing epidemic over %i days\n", period))
+  print(sprintf("showing estimates for a fast, non-exponentially growing epidemic over %i days\n", period))
   print(results)
   saveRDS(results, sprintf("evaluation/out/fast_%i.rds", period))
 }
