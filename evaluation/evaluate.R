@@ -5,14 +5,14 @@ source("evaluation/estimate.R")
 #    the estimator we are evaluating assumes a gamma distribution so it is expected to be a gamma distribution.
 # 2. [expectedCFR]: the expected CFR the estimator should converge to if it is consistent
 # 3. [period]: a finite period of days over which CFR is to be estimated
-# 4. [mindailyCaseCounts]: the minimum number of new cases that can be reported on any given
+# 4. [minDailyCaseCount]: the minimum number of new cases that can be reported on any given
 #    day within the period: [period]
-# 5. [maxdailyCaseCounts]: the maximum number of new cases that can be reported on any given
+# 5. [maxDailyCaseCount]: the maximum number of new cases that can be reported on any given
 #    day within the period: [period]
 # 6. [iterations]: the number of iterations over which CFR will be estimated from cases randomly sampled
 #    from the underlying distribution
 evaluate <- function(delayDistribution, expectedCFR, period,
-                              mindailyCaseCounts=0, maxdailyCaseCounts=4, iterations=100) {
+                              minDailyCaseCount=0, maxDailyCaseCount=4, iterations=100) {
   # [estimates] is a table used to collate estimates generated from all iterations.
   # for each iteration we record:
   # 1. the estimated CFR, 
@@ -28,8 +28,8 @@ evaluate <- function(delayDistribution, expectedCFR, period,
   # and generate estimates for the CFR, among other things (see above) on each iteration
   for (k in 1:iterations) {
     # sample case counts for a total of [period] days from a uniform distribution
-    # with min = [mindailyCaseCounts] and max = [maxdailyCaseCounts]
-    dailyCaseCounts <- round(runif(n=period, min=mindailyCaseCounts, max=maxdailyCaseCounts))
+    # with min = [minDailyCaseCount] and max = [maxDailyCaseCount]
+    dailyCaseCounts <- round(runif(n=period, min=minDailyCaseCount, max=maxDailyCaseCount))
     # tally the total cases reported over [period] days
     totalCaseCount <- sum(dailyCaseCounts)
     
