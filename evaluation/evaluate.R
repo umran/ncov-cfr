@@ -10,12 +10,12 @@ expectedCFR <- 0.02
 
 # simulations of slow and non-exponential epidemic growth over varying periods
 for (period in periods) {
-  results <- sim(linton_dist, expectedCFR, period)
+  results <- sim(linton_dist, expectedCFR, period, minDailyCaseCount=0, maxDailyCaseCount=4)
   saveRDS(results, sprintf("evaluation/out/slow_%i.rds", period))
 }
 
 # simulations of fast and non-exponential epidemic growth over varying periods
 for (period in periods) {
-  results <- sim(linton_dist, expectedCFR, period, minDailyCases=0, maxDailyCases=100)
+  results <- sim(linton_dist, expectedCFR, period, minDailyCaseCount=0, maxDailyCaseCount=100)
   saveRDS(results, sprintf("evaluation/out/fast_%i.rds", period))
 }
