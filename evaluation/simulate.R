@@ -19,10 +19,13 @@ sim <- function(delayDistribution, expectedCFR, period,
   # 2. the estimated lower bound of the estimated CFR
   # 3. the estimated upper bound of the estimated CFR
   # 4. the actual CFR of all simulated cases
-  # 5. the naive CFR estimated by taking the total deaths realized over the period: [period] divided by 
+  # 5. the naive CFR estimated by taking the total deaths realized over the period: [period] divided by
   #    the total number of cases over the period: [period]
-  estimates <- as.data.frame(matrix(data=NA, nrow=iterations, ncol=5))
-  names(estimates) <- c("estimated_cfr", "lower", "upper", "actual_cfr", "naive_cfr")
+  # 6. the total case count
+  # 7. the total death count observed within the period: [period]
+  estimates <- as.data.frame(matrix(data=NA, nrow=iterations, ncol=7))
+  names(estimates) <- c("estimated_cfr", "lower", "upper", "actual_cfr",
+                        "naive_cfr", "observed_cases", "observed_deaths")
   
   # we simulate random samples from the underlying distributions (with predetermined parameters)
   # and generate estimates for the CFR, among other things (see above) on each iteration
@@ -80,6 +83,9 @@ sim <- function(delayDistribution, expectedCFR, period,
       }
     }
     
+    # tally the total simulated death count
+    totalSimulatedDeathCount <- sum(assignedFatality)
+    
     # tally daily deaths within period [period]
     dailyDeathCounts <- rep(0, period)
     # we iterate over all the sampled cases
@@ -97,13 +103,20 @@ sim <- function(delayDistribution, expectedCFR, period,
       }
     }
     
+    # tally the total observed death count over the period: [period]
+    totalObservedDeathCount <- sum(dailyDeathCounts)
+    
     # estimate cfr
     estimates[k, 1:3] = estimateCFR(delayDistribution, dailyCaseCounts, dailyDeathCounts)
     
-    # record actual cfr
-    estimates[k, 4] = sum(assignedFatality)/sum(dailyCaseCounts)
+    # record actual simulated cfr
+    estimates[k, 4] = totalSimulatedDeathCount/totalCaseCount
     # record naive cfr
-    estimates[k, 5] = sum(dailyDeathCounts)/sum(dailyCaseCounts)
+    estimates[k, 5] = totalObservedDeathCount/totalCaseCount
+    # record observed cases
+    estimates[k, 6] = totalCaseCount
+    # record observed deaths
+    estimates[k, 7] = totalObservedDeathCount
   }
   
   return(estimates)
