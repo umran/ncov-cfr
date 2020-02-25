@@ -5,17 +5,16 @@ source("evaluation/estimate.R")
 #    the estimator we are evaluating assumes a gamma distribution so it is expected to be a gamma distribution.
 # 2. [expectedCFR]: the expected CFR the estimator should converge to if it is consistent
 # 3. [period]: a finite period of days over which CFR is to be estimated
-# 4. [minDailyCaseCount]: the minimum number of new cases that can be reported on any given
-#    day within the period: [period]
-# 5. [maxDailyCaseCount]: the maximum number of new cases that can be reported on any given
-#    day within the period: [period]
-# 6. [iterations]: the number of iterations over which CFR will be estimated from cases randomly sampled
+# 4. [meanDailyCaseCount]: the mean number of new cases per day
+# 5. [sdDailyCaseCount]: the standard deviation of the number of new cases per day
+# 6. [doublingTime]: the number of days it takes for mean daily case counts to double
+# 7. [iterations]: the number of iterations over which CFR will be estimated from cases randomly sampled
 #    from the underlying distribution
-sim <- function(delayDistribution, expectedCFR, period,
-                              minDailyCaseCount=0, maxDailyCaseCount=4, iterations=1) {
+sim <- function(delayDistribution, expectedCFR, period, meanDailyCaseCount=2, sdDailyCaseCount=2.1,
+                doublingTime=0, iterations=1) {
   # [estimates] is a table used to collate estimates generated from all iterations.
   # for each iteration we record:
-  # 1. the estimated CFR, 
+  # 1. the estimated CFR,
   # 2. the estimated lower bound of the estimated CFR
   # 3. the estimated upper bound of the estimated CFR
   # 4. the actual CFR of all simulated cases
@@ -30,9 +29,22 @@ sim <- function(delayDistribution, expectedCFR, period,
   # we simulate random samples from the underlying distributions (with predetermined parameters)
   # and generate estimates for the CFR, among other things (see above) on each iteration
   for (k in 1:iterations) {
-    # sample case counts for a total of [period] days from a uniform distribution
-    # with min = [minDailyCaseCount] and max = [maxDailyCaseCount]
-    dailyCaseCounts <- round(runif(n=period, min=minDailyCaseCount, max=maxDailyCaseCount))
+    # create a vector to hold daily case counts
+    dailyCaseCounts <- c()
+    
+    if (doublingTime > 0) {
+      # if doublingTime is greater than zero, for each doubling period we double the mean before sampling
+      # the daily case count from a normal distribution
+      for (i in 1:period) {
+        factor <- 2^(floor((i-1)/doublingTime))
+        dailyCaseCounts[i] = abs(round(rnorm(n=1, mean=factor*meanDailyCaseCount, sd=sqrt(factor)*sdDailyCaseCount)))[1]
+      }
+    } else {
+      # if doublingTime is zero, sample case counts for a total of [period] days from a normal distribution
+      # with constant mean = [meanDailyCaseCount] and sd = [sdDailyCaseCount]
+      dailyCaseCounts = abs(round(rnorm(n=period, mean=meanDailyCaseCount, sd=sdDailyCaseCount)))
+    }
+    
     # tally the total cases reported over [period] days
     totalCaseCount <- sum(dailyCaseCounts)
     
