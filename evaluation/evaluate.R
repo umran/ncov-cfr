@@ -1,3 +1,5 @@
+# for a better idea of what's happening behind the scenes during simulation
+# read the source for the sim function here: [https://github.com/umran/ncov-cfr/blob/master/evaluation/simulate.R]
 source("evaluation/simulate.R")
 
 # estimated gamma distribution of delay between symptom onset and death
