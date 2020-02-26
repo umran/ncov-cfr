@@ -10,24 +10,30 @@ expectedCFR <- 0.02
 
 # simulations of slow and non-exponential epidemic growth over varying periods
 for (period in periods) {
-  results <- sim(linton_dist, expectedCFR, period, meanDailyCaseCount=2, sdDailyCaseCount=2)
+  results <- sim(linton_dist, expectedCFR, period, meanDailyCaseCount=5, sdDailyCaseCount=5, iterations=1)
   print(sprintf("showing estimates for a slow, non-exponentially growing epidemic over %i days", period))
   print(results)
+  print(sprintf("showing mean estimates for a total of %i simulations", nrow(results)))
+  print(colMeans(results))
   # saveRDS(results, sprintf("evaluation/out/slow_%i.rds", period))
 }
 
 # simulations of fast and non-exponential epidemic growth over varying periods
 for (period in periods) {
-  results <- sim(linton_dist, expectedCFR, period, meanDailyCaseCount=50, sdDailyCaseCount=25)
+  results <- sim(linton_dist, expectedCFR, period, meanDailyCaseCount=50, sdDailyCaseCount=25, iterations=1)
   print(sprintf("showing estimates for a fast, non-exponentially growing epidemic over %i days", period))
   print(results)
+  print(sprintf("showing mean estimates for a total of %i simulations", nrow(results)))
+  print(colMeans(results))
   # saveRDS(results, sprintf("evaluation/out/fast_%i.rds", period))
 }
 
 # simulations of exponential epidemic growth over varying periods
 for (period in periods) {
-  results <- sim(linton_dist, expectedCFR, period, meanDailyCaseCount=10, sdDailyCaseCount=10.2, doublingTime=6)
+  results <- sim(linton_dist, expectedCFR, period, meanDailyCaseCount=10, sdDailyCaseCount=10, doublingTime=6, iterations=1)
   print(sprintf("showing estimates for an exponentially growing epidemic over %i days", period))
   print(results)
+  print(sprintf("showing mean estimates for a total of %i simulation(s)", nrow(results)))
+  print(colMeans(results))
   # saveRDS(results, sprintf("evaluation/out/fast_%i.rds", period))
 }
